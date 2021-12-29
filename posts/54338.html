@@ -1,0 +1,756 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Executor框架 | Hy</title><meta name="keywords" content="Executor,多线程,线程"><meta name="author" content="Hy"><meta name="copyright" content="Hy"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="Executor框架">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Executor框架">
+<meta property="og:url" content="https://13592491893.github.io/posts/54338.html">
+<meta property="og:site_name" content="Hy">
+<meta property="og:description" content="Executor框架">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://gitee.com/gsshy/picgo/raw/master/img/tianyuandan.jpg">
+<meta property="article:published_time" content="2021-02-21T16:00:00.000Z">
+<meta property="article:modified_time" content="2021-12-29T03:19:25.623Z">
+<meta property="article:author" content="Hy">
+<meta property="article:tag" content="Executor">
+<meta property="article:tag" content="多线程">
+<meta property="article:tag" content="线程">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://gitee.com/gsshy/picgo/raw/master/img/tianyuandan.jpg"><link rel="shortcut icon" href="https://gitee.com/gsshy/picgo/raw/master/img/goutou.jpg"><link rel="canonical" href="https://13592491893.github.io/posts/54338"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"search.xml","languages":{"hits_empty":"找不到您查询的内容：${query}"}},
+  translate: {"defaultEncoding":2,"translateDelay":0,"msgToTraditionalChinese":"繁","msgToSimplifiedChinese":"簡"},
+  noticeOutdate: {"limitDay":365,"position":"top","messagePrev":"一年之内的产物","messageNext":"技术可能存在过期"},
+  highlight: {"plugin":"prismjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":200},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '天',
+  date_suffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: {"limitCount":50,"languages":{"author":"作者: Hy","link":"链接: ","source":"来源: Hy","info":"著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。"}},
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  source: {
+    jQuery: 'https://cdn.bootcss.com/jquery/3.1.1/jquery.min.js',
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/justifiedGallery/dist/js/jquery.justifiedGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/justifiedGallery/dist/css/justifiedGallery.min.css'
+    },
+    fancybox: {
+      js: 'https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.css'
+    }
+  },
+  isPhotoFigcaption: true,
+  islazyload: true,
+  isanchor: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'Executor框架',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2021-12-29 03:19:25'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          if (t === 'dark') activateDarkMode()
+          else if (t === 'light') activateLightMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+    const detectApple = () => {
+      if (GLOBAL_CONFIG_SITE.isHome && /iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+    document.addEventListener('pjax:complete', detectApple)})(window)</script><link defer rel="stylesheet" href="/css/customm.css" ><link defer rel="stylesheet" href="https://cdn.jsdelivr.net/gh/zhaoze-jpg/Xianqi@main/css/icon.css"><link defer rel="stylesheet" href="https://cdn.jsdelivr.net/gh/HCLonely/images@master/others/heartbeat.min.css"><link defer rel="stylesheet" href="https://cdn.jsdelivr.net/gh/zhaoze-jpg/Xianqi@main/css/background.css"><meta name="generator" content="Hexo 5.2.0">
+<style>.github-emoji { position: relative; display: inline-block; width: 1.2em; min-height: 1.2em; overflow: hidden; vertical-align: top; color: transparent; }  .github-emoji > span { position: relative; z-index: 10; }  .github-emoji img, .github-emoji .fancybox { margin: 0 !important; padding: 0 !important; border: none !important; outline: none !important; text-decoration: none !important; user-select: none !important; cursor: auto !important; }  .github-emoji img { height: 1.2em !important; width: 1.2em !important; position: absolute !important; left: 50% !important; top: 50% !important; transform: translate(-50%, -50%) !important; user-select: none !important; cursor: auto !important; } .github-emoji-fallback { color: inherit; } .github-emoji-fallback img { opacity: 0 !important; }</style>
+<link rel="alternate" href="/atom.xml" title="Hy" type="application/atom+xml">
+</head><body><div id="loading-box"><div class="loading-left-bg"></div><div class="loading-right-bg"></div><div class="spinner-box"><div class="configure-border-1"><div class="configure-core"></div></div><div class="configure-border-2"><div class="configure-core"></div></div><div class="loading-word">加载中...</div></div></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src= "data:image/gif;base64,R0lGODdhAQABAPAAAMPDwwAAACwAAAAAAQABAAACAkQBADs=" data-lazy-src="https://gitee.com/gsshy/picgo/raw/master/img/goutou.jpg" onerror="onerror=null;src='https://cdn.jsdelivr.net/gh/zhaoze-jpg/Xianqi@main/img/friend_404.gif'" alt="avatar"/></div><div class="site-data"><div class="data-item is-center"><div class="data-item-link"><a href="/archives/"><div class="headline">文章</div><div class="length-num">30</div></a></div></div><div class="data-item is-center"><div class="data-item-link"><a href="/tags/"><div class="headline">标签</div><div class="length-num">59</div></a></div></div><div class="data-item is-center"><div class="data-item-link"><a href="/categories/"><div class="headline">分类</div><div class="length-num">15</div></a></div></div></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fa fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="javascript:void(0);"><i class="fa-fw fas fa-archive"></i><span> 归档</span><i class="fas fa-chevron-down expand"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/artitalk/"><i class="fa-fw fas fa-book"></i><span> 说说</span></a></li><li><a class="site-page child" href="/archives/"><i class="fa-fw fa fa-archive"></i><span> 时轴</span></a></li><li><a class="site-page child" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></li><li><a class="site-page child" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="javascript:void(0);"><i class="fa-fw fas fa-heartbeat"></i><span> 清单</span><i class="fas fa-chevron-down expand"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/List/music/"><i class="fa-fw fa fa-music"></i><span> 音乐</span></a></li><li><a class="site-page child" href="/List/gallery/"><i class="fa-fw fa fa-image"></i><span> 相册</span></a></li><li><a class="site-page child" href="/List/movies/"><i class="fa-fw fa fa-film"></i><span> 视频</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/comments/"><i class="fa-fw fa fa-paper-plane"></i><span> 留言板</span></a></div><div class="menus_item"><a class="site-page" href="/tools/"><i class="fa-fw fa fa-suitcase"></i><span> 百宝箱</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fa fa-link"></i><span> 友链</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fa fa-heart"></i><span> 关于我</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('https://gitee.com/gsshy/picgo/raw/master/img/top.jpg')"><nav id="nav"><span id="blog_name"><a id="site-name" href="/">Hy</a></span><div id="menus"><div id="search-button"><a class="site-page social-icon search"><i class="fas fa-search fa-fw"></i><span> 搜索</span></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fa fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="javascript:void(0);"><i class="fa-fw fas fa-archive"></i><span> 归档</span><i class="fas fa-chevron-down expand"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/artitalk/"><i class="fa-fw fas fa-book"></i><span> 说说</span></a></li><li><a class="site-page child" href="/archives/"><i class="fa-fw fa fa-archive"></i><span> 时轴</span></a></li><li><a class="site-page child" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></li><li><a class="site-page child" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="javascript:void(0);"><i class="fa-fw fas fa-heartbeat"></i><span> 清单</span><i class="fas fa-chevron-down expand"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/List/music/"><i class="fa-fw fa fa-music"></i><span> 音乐</span></a></li><li><a class="site-page child" href="/List/gallery/"><i class="fa-fw fa fa-image"></i><span> 相册</span></a></li><li><a class="site-page child" href="/List/movies/"><i class="fa-fw fa fa-film"></i><span> 视频</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/comments/"><i class="fa-fw fa fa-paper-plane"></i><span> 留言板</span></a></div><div class="menus_item"><a class="site-page" href="/tools/"><i class="fa-fw fa fa-suitcase"></i><span> 百宝箱</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fa fa-link"></i><span> 友链</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fa fa-heart"></i><span> 关于我</span></a></div></div><div id="toggle-menu"><a class="site-page"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">Executor框架</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2021-02-21T16:00:00.000Z" title="发表于 2021-02-21 16:00:00">2021-02-21</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2021-12-29T03:19:25.623Z" title="更新于 2021-12-29 03:19:25">2021-12-29</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/java/">java</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="Executor框架"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h1 id="Executor框架"><a href="#Executor框架" class="headerlink" title="Executor框架"></a>Executor框架</h1><h2 id="一、Executor、Executors、ExecutorService"><a href="#一、Executor、Executors、ExecutorService" class="headerlink" title="一、Executor、Executors、ExecutorService"></a>一、Executor、Executors、ExecutorService</h2><p>在Java 5之后，并发编程引入了一堆新的启动、调度和管理线程的API。Executor框架便是Java 5中引入的，其内部使用了线程池机制，它在java.util.cocurrent 包下，通过该框架来控制线程的启动、执行和关闭，可以简化并发编程的操作。因此，在Java 5之后，通过Executor来启动线程比使用Thread的start方法更好，除了更易管理，效率更好（用线程池实现，节约开销）外，还有关键的一点：有助于避免this逃逸问题——如果我们在构造器中启动一个线程，因为另一个任务可能会在构造器结束之前开始执行，此时可能会访问到初始化了一半的对象用Executor在构造器中。Eexecutor作为灵活且强大的异步执行框架，其支持多种不同类型的任务执行策略，提供了一种标准的方法将任务的提交过程和执行过程解耦开发，基于生产者-消费者模式，其提交任务的线程相当于生产者，执行任务的线程相当于消费者，并用Runnable来表示任务，Executor的实现还提供了对生命周期的支持，以及统计信息收集，应用程序管理机制和性能监视等机制。</p>
+<h3 id="1、Executor的UML图：（常用的几个接口和子类）"><a href="#1、Executor的UML图：（常用的几个接口和子类）" class="headerlink" title="1、Executor的UML图：（常用的几个接口和子类）"></a>1、Executor的UML图：（常用的几个接口和子类）</h3><p><img src= "data:image/gif;base64,R0lGODdhAQABAPAAAMPDwwAAACwAAAAAAQABAAACAkQBADs=" data-lazy-src="https://gitee.com/gsshy/picgo/raw/master/img/image-20210323103723142.png" alt="image-20210323103723142"></p>
+<p>Executor框架包括：线程池，Executor，Executors，ExecutorService，CompletionService，Future，Callable等。</p>
+<h3 id="2、Executor和ExecutorService"><a href="#2、Executor和ExecutorService" class="headerlink" title="2、Executor和ExecutorService"></a>2、Executor和ExecutorService</h3><p><strong>Executor：</strong>一个接口，其定义了一个接收Runnable对象的方法executor，其方法签名为executor(Runnable command),该方法接收一个Runable实例，它用来执行一个任务，任务即一个实现了Runnable接口的类，一般来说，Runnable任务开辟在新线程中的使用方法为：new Thread(new RunnableTask())).start()，但在Executor中，可以使用Executor而不用显示地创建线程：executor.execute(new RunnableTask()); // 异步执行</p>
+<p>ExecutorService：是一个比Executor使用更广泛的子类接口，其提供了生命周期管理的方法，返回 Future 对象，以及可跟踪一个或多个异步任务执行状况返回Future的方法；可以调用ExecutorService的shutdown（）方法来平滑地关闭 ExecutorService，调用该方法后，将导致ExecutorService停止接受任何新的任务且等待已经提交的任务执行完成(已经提交的任务会分两类：一类是已经在执行的，另一类是还没有开始执行的)，当所有已经提交的任务执行完毕后将会关闭ExecutorService。因此我们一般用该接口来实现和管理多线程。</p>
+<p>通过 ExecutorService.submit() 方法返回的 Future 对象，可以调用isDone（）方法查询Future是否已经完成。当任务完成时，它具有一个结果，你可以调用get()方法来获取该结果。你也可以不用isDone（）进行检查就直接调用get()获取结果，在这种情况下，get()将阻塞，直至结果准备就绪，还可以取消任务的执行。Future 提供了 cancel() 方法用来取消执行 pending 中的任务。ExecutorService 部分代码如下：</p>
+<pre class="line-numbers language-java" data-language="java"><code class="language-java"><span class="token keyword">public</span> <span class="token keyword">interface</span> <span class="token class-name">ExecutorService</span> <span class="token keyword">extends</span> <span class="token class-name">Executor</span> <span class="token punctuation">{</span>
+	<span class="token keyword">void</span> <span class="token function">shutdown</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+	<span class="token generics"><span class="token punctuation">&lt;</span><span class="token class-name">T</span><span class="token punctuation">&gt;</span></span> <span class="token class-name">Future</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token class-name">T</span><span class="token punctuation">&gt;</span></span> <span class="token function">submit</span><span class="token punctuation">(</span><span class="token class-name">Callable</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token class-name">T</span><span class="token punctuation">&gt;</span></span> task<span class="token punctuation">)</span><span class="token punctuation">;</span>
+	<span class="token generics"><span class="token punctuation">&lt;</span><span class="token class-name">T</span><span class="token punctuation">&gt;</span></span> <span class="token class-name">Future</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token class-name">T</span><span class="token punctuation">&gt;</span></span> <span class="token function">submit</span><span class="token punctuation">(</span><span class="token class-name">Runnable</span> task<span class="token punctuation">,</span> <span class="token class-name">T</span> result<span class="token punctuation">)</span><span class="token punctuation">;</span>
+	<span class="token generics"><span class="token punctuation">&lt;</span><span class="token class-name">T</span><span class="token punctuation">&gt;</span></span> <span class="token class-name">List</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token class-name">Future</span><span class="token punctuation">&lt;</span><span class="token class-name">T</span><span class="token punctuation">&gt;</span><span class="token punctuation">&gt;</span></span> <span class="token function">invokeAll</span><span class="token punctuation">(</span><span class="token class-name">Collection</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token operator">?</span> <span class="token keyword">extends</span> <span class="token class-name">Callable</span><span class="token punctuation">&lt;</span><span class="token class-name">T</span><span class="token punctuation">&gt;</span><span class="token punctuation">&gt;</span></span> tasks<span class="token punctuation">,</span> <span class="token keyword">long</span> timeout<span class="token punctuation">,</span> <span class="token class-name">TimeUnit</span> unit<span class="token punctuation">)</span> <span class="token keyword">throws</span> <span class="token class-name">InterruptedException</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<h3 id="3、Executors类：-主要用于提供线程池相关的操作"><a href="#3、Executors类：-主要用于提供线程池相关的操作" class="headerlink" title="3、Executors类： 主要用于提供线程池相关的操作"></a>3、Executors类： 主要用于提供线程池相关的操作</h3><p>Executors类，提供了一系列工厂方法用于创建线程池，返回的线程池都实现了ExecutorService接口。</p>
+<ol>
+<li><p>public static ExecutorService newFiexedThreadPool(int Threads) 创建固定数目线程的线程池。</p>
+</li>
+<li><p>public static ExecutorService newCachedThreadPool()：创建一个可缓存的线程池，调用execute 将重用以前构造的线程（如果线程可用）。如果没有可用的线程，则创建一个新线程并添加到池中。终止并从缓存中移除那些已有 60 秒钟未被使用的线程。</p>
+</li>
+<li><p>public static ExecutorService newSingleThreadExecutor()：创建一个单线程化的Executor。</p>
+</li>
+<li><p>public static ScheduledExecutorService newScheduledThreadPool(int corePoolSize)：创建一个支持定时及周期性的任务执行的线程池，多数情况下可用来替代Timer类。</p>
+</li>
+</ol>
+<h3 id="4、Executor-VS-ExecutorService-VS-Executors"><a href="#4、Executor-VS-ExecutorService-VS-Executors" class="headerlink" title="4、Executor VS ExecutorService VS Executors"></a>4、Executor VS ExecutorService VS Executors</h3><p>正如上面所说，这三者均是 Executor 框架中的一部分。Java 开发者很有必要学习和理解他们，以便更高效的使用 Java 提供的不同类型的线程池。总结一下这三者间的区别，以便大家更好的理解：</p>
+<p>Executor 和 ExecutorService 这两个接口主要的区别是：ExecutorService 接口继承了 Executor 接口，是 Executor 的子接口<br>Executor 和 ExecutorService 第二个区别是：Executor 接口定义了 execute()方法用来接收一个Runnable接口的对象，而 ExecutorService 接口中的 submit()方法可以接受Runnable和Callable接口的对象。<br>Executor 和 ExecutorService 接口第三个区别是 Executor 中的 execute() 方法不返回任何结果，而 ExecutorService 中的 submit()方法可以通过一个 Future 对象返回运算结果。<br>Executor 和 ExecutorService 接口第四个区别是除了允许客户端提交一个任务，ExecutorService 还提供用来控制线程池的方法。比如：调用 shutDown() 方法终止线程池。可以通过 《Java Concurrency in Practice》 一书了解更多关于关闭线程池和如何处理 pending 的任务的知识。<br>Executors 类提供工厂方法用来创建不同类型的线程池。比如: newSingleThreadExecutor() 创建一个只有一个线程的线程池，newFixedThreadPool(int numOfThreads)来创建固定线程数的线程池，newCachedThreadPool()可以根据需要创建新的线程，但如果已有线程是空闲的会重用已有线程。<br>下面给出一个Executor执行Callable任务的示例代码：</p>
+<pre class="line-numbers language-java" data-language="java"><code class="language-java"><span class="token keyword">import</span> <span class="token namespace">java<span class="token punctuation">.</span>util<span class="token punctuation">.</span></span><span class="token class-name">ArrayList</span><span class="token punctuation">;</span>   
+<span class="token keyword">import</span> <span class="token namespace">java<span class="token punctuation">.</span>util<span class="token punctuation">.</span></span><span class="token class-name">List</span><span class="token punctuation">;</span>   
+<span class="token keyword">import</span> <span class="token namespace">java<span class="token punctuation">.</span>util<span class="token punctuation">.</span>concurrent<span class="token punctuation">.</span></span><span class="token operator">*</span><span class="token punctuation">;</span>   
+  
+<span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">CallableDemo</span><span class="token punctuation">{</span>   
+    <span class="token keyword">public</span> <span class="token keyword">static</span> <span class="token keyword">void</span> <span class="token function">main</span><span class="token punctuation">(</span><span class="token class-name">String</span><span class="token punctuation">[</span><span class="token punctuation">]</span> args<span class="token punctuation">)</span><span class="token punctuation">{</span>   
+        <span class="token class-name">ExecutorService</span> executorService <span class="token operator">=</span> <span class="token class-name">Executors</span><span class="token punctuation">.</span><span class="token function">newCachedThreadPool</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>   
+        <span class="token class-name">List</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token class-name">Future</span><span class="token punctuation">&lt;</span><span class="token class-name">String</span><span class="token punctuation">&gt;</span><span class="token punctuation">&gt;</span></span> resultList <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">ArrayList</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token class-name">Future</span><span class="token punctuation">&lt;</span><span class="token class-name">String</span><span class="token punctuation">&gt;</span><span class="token punctuation">&gt;</span></span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>   
+        <span class="token comment">//创建10个任务并执行   </span>
+        <span class="token keyword">for</span> <span class="token punctuation">(</span><span class="token keyword">int</span> i <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span> i <span class="token operator">&lt;</span> <span class="token number">10</span><span class="token punctuation">;</span> i<span class="token operator">++</span><span class="token punctuation">)</span><span class="token punctuation">{</span>   
+            <span class="token comment">//使用ExecutorService执行Callable类型的任务，并将结果保存在future变量中   </span>
+            <span class="token class-name">Future</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token class-name">String</span><span class="token punctuation">&gt;</span></span> future <span class="token operator">=</span> executorService<span class="token punctuation">.</span><span class="token function">submit</span><span class="token punctuation">(</span><span class="token keyword">new</span> <span class="token class-name">TaskWithResult</span><span class="token punctuation">(</span>i<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>   
+            <span class="token comment">//将任务执行结果存储到List中   </span>
+            resultList<span class="token punctuation">.</span><span class="token function">add</span><span class="token punctuation">(</span>future<span class="token punctuation">)</span><span class="token punctuation">;</span>   
+        <span class="token punctuation">}</span>   
+        <span class="token comment">//遍历任务的结果   </span>
+        <span class="token keyword">for</span> <span class="token punctuation">(</span><span class="token class-name">Future</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token class-name">String</span><span class="token punctuation">&gt;</span></span> fs <span class="token operator">:</span> resultList<span class="token punctuation">)</span><span class="token punctuation">{</span>   
+                <span class="token keyword">try</span><span class="token punctuation">{</span>   
+                    <span class="token keyword">while</span><span class="token punctuation">(</span><span class="token operator">!</span>fs<span class="token punctuation">.</span>isDone<span class="token punctuation">)</span><span class="token punctuation">;</span><span class="token comment">//Future返回如果没有完成，则一直循环等待，直到Future返回完成  </span>
+                    <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span>fs<span class="token punctuation">.</span><span class="token function">get</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>     <span class="token comment">//打印各个线程（任务）执行的结果   </span>
+                <span class="token punctuation">}</span><span class="token keyword">catch</span><span class="token punctuation">(</span><span class="token class-name">InterruptedException</span> e<span class="token punctuation">)</span><span class="token punctuation">{</span>   
+                    e<span class="token punctuation">.</span><span class="token function">printStackTrace</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>   
+                <span class="token punctuation">}</span><span class="token keyword">catch</span><span class="token punctuation">(</span><span class="token class-name">ExecutionException</span> e<span class="token punctuation">)</span><span class="token punctuation">{</span>   
+                    e<span class="token punctuation">.</span><span class="token function">printStackTrace</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>   
+                <span class="token punctuation">}</span><span class="token keyword">finally</span><span class="token punctuation">{</span>   
+                    <span class="token comment">//启动一次顺序关闭，执行以前提交的任务，但不接受新任务  </span>
+                    executorService<span class="token punctuation">.</span><span class="token function">shutdown</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>   
+                <span class="token punctuation">}</span>   
+        <span class="token punctuation">}</span>   
+    <span class="token punctuation">}</span>   
+<span class="token punctuation">}</span>   
+  
+<span class="token keyword">class</span> <span class="token class-name">TaskWithResult</span> <span class="token keyword">implements</span> <span class="token class-name">Callable</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token class-name">String</span><span class="token punctuation">&gt;</span></span><span class="token punctuation">{</span>   
+    <span class="token keyword">private</span> <span class="token keyword">int</span> id<span class="token punctuation">;</span>   
+  
+    <span class="token keyword">public</span> <span class="token class-name">TaskWithResult</span><span class="token punctuation">(</span><span class="token keyword">int</span> id<span class="token punctuation">)</span><span class="token punctuation">{</span>   
+        <span class="token keyword">this</span><span class="token punctuation">.</span>id <span class="token operator">=</span> id<span class="token punctuation">;</span>   
+    <span class="token punctuation">}</span>   
+  
+    <span class="token comment">/**  
+     * 任务的具体过程，一旦任务传给ExecutorService的submit方法， 
+     * 则该方法自动在一个线程上执行 
+     */</span>   
+    <span class="token keyword">public</span> <span class="token class-name">String</span> <span class="token function">call</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token keyword">throws</span> <span class="token class-name">Exception</span> <span class="token punctuation">{</span>  
+        <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token string">"call()方法被自动调用！！！    "</span> <span class="token operator">+</span> <span class="token class-name">Thread</span><span class="token punctuation">.</span><span class="token function">currentThread</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">getName</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>   
+        <span class="token comment">//该返回结果将被Future的get方法得到  </span>
+        <span class="token keyword">return</span> <span class="token string">"call()方法被自动调用，任务返回的结果是："</span> <span class="token operator">+</span> id <span class="token operator">+</span> <span class="token string">"    "</span> <span class="token operator">+</span> <span class="token class-name">Thread</span><span class="token punctuation">.</span><span class="token function">currentThread</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">getName</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>   
+    <span class="token punctuation">}</span>   
+<span class="token punctuation">}</span>  <span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<h3 id="5、自定义线程池"><a href="#5、自定义线程池" class="headerlink" title="5、自定义线程池"></a>5、自定义线程池</h3><p>自定义线程池，可以用ThreadPool Executor类创建，它有多个构造方法来创建线程池，用该类很容易实现自定义的线程池，这里先贴上示例程序：</p>
+<pre class="line-numbers language-java" data-language="java"><code class="language-java"><span class="token keyword">import</span> <span class="token namespace">java<span class="token punctuation">.</span>util<span class="token punctuation">.</span>concurrent<span class="token punctuation">.</span></span><span class="token class-name">ArrayBlockingQueue</span><span class="token punctuation">;</span>   
+<span class="token keyword">import</span> <span class="token namespace">java<span class="token punctuation">.</span>util<span class="token punctuation">.</span>concurrent<span class="token punctuation">.</span></span><span class="token class-name">BlockingQueue</span><span class="token punctuation">;</span>   
+<span class="token keyword">import</span> <span class="token namespace">java<span class="token punctuation">.</span>util<span class="token punctuation">.</span>concurrent<span class="token punctuation">.</span></span><span class="token class-name">ThreadPoolExecutor</span><span class="token punctuation">;</span>   
+<span class="token keyword">import</span> <span class="token namespace">java<span class="token punctuation">.</span>util<span class="token punctuation">.</span>concurrent<span class="token punctuation">.</span></span><span class="token class-name">TimeUnit</span><span class="token punctuation">;</span>   
+  
+<span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">ThreadPoolTest</span><span class="token punctuation">{</span>   
+    <span class="token keyword">public</span> <span class="token keyword">static</span> <span class="token keyword">void</span> <span class="token function">main</span><span class="token punctuation">(</span><span class="token class-name">String</span><span class="token punctuation">[</span><span class="token punctuation">]</span> args<span class="token punctuation">)</span><span class="token punctuation">{</span>   
+        <span class="token comment">//创建等待队列   </span>
+        <span class="token class-name">BlockingQueue</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token class-name">Runnable</span><span class="token punctuation">&gt;</span></span> bqueue <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">ArrayBlockingQueue</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token class-name">Runnable</span><span class="token punctuation">&gt;</span></span><span class="token punctuation">(</span><span class="token number">20</span><span class="token punctuation">)</span><span class="token punctuation">;</span>   
+        <span class="token comment">//创建线程池，池中保存的线程数为3，允许的最大线程数为5  </span>
+        <span class="token class-name">ThreadPoolExecutor</span> pool <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">ThreadPoolExecutor</span><span class="token punctuation">(</span><span class="token number">3</span><span class="token punctuation">,</span><span class="token number">5</span><span class="token punctuation">,</span><span class="token number">50</span><span class="token punctuation">,</span><span class="token class-name">TimeUnit</span><span class="token punctuation">.</span>MILLISECONDS<span class="token punctuation">,</span>bqueue<span class="token punctuation">)</span><span class="token punctuation">;</span>   
+        <span class="token comment">//创建七个任务   </span>
+        <span class="token class-name">Runnable</span> t1 <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">MyThread</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>   
+        <span class="token class-name">Runnable</span> t2 <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">MyThread</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>   
+        <span class="token class-name">Runnable</span> t3 <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">MyThread</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>   
+        <span class="token class-name">Runnable</span> t4 <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">MyThread</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>   
+        <span class="token class-name">Runnable</span> t5 <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">MyThread</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>   
+        <span class="token class-name">Runnable</span> t6 <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">MyThread</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>   
+        <span class="token class-name">Runnable</span> t7 <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">MyThread</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>   
+        <span class="token comment">//每个任务会在一个线程上执行  </span>
+        pool<span class="token punctuation">.</span><span class="token function">execute</span><span class="token punctuation">(</span>t1<span class="token punctuation">)</span><span class="token punctuation">;</span>   
+        pool<span class="token punctuation">.</span><span class="token function">execute</span><span class="token punctuation">(</span>t2<span class="token punctuation">)</span><span class="token punctuation">;</span>   
+        pool<span class="token punctuation">.</span><span class="token function">execute</span><span class="token punctuation">(</span>t3<span class="token punctuation">)</span><span class="token punctuation">;</span>   
+        pool<span class="token punctuation">.</span><span class="token function">execute</span><span class="token punctuation">(</span>t4<span class="token punctuation">)</span><span class="token punctuation">;</span>   
+        pool<span class="token punctuation">.</span><span class="token function">execute</span><span class="token punctuation">(</span>t5<span class="token punctuation">)</span><span class="token punctuation">;</span>   
+        pool<span class="token punctuation">.</span><span class="token function">execute</span><span class="token punctuation">(</span>t6<span class="token punctuation">)</span><span class="token punctuation">;</span>   
+        pool<span class="token punctuation">.</span><span class="token function">execute</span><span class="token punctuation">(</span>t7<span class="token punctuation">)</span><span class="token punctuation">;</span>   
+        <span class="token comment">//关闭线程池   </span>
+        pool<span class="token punctuation">.</span><span class="token function">shutdown</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>   
+    <span class="token punctuation">}</span>   
+<span class="token punctuation">}</span>   
+  
+<span class="token keyword">class</span> <span class="token class-name">MyThread</span> <span class="token keyword">implements</span> <span class="token class-name">Runnable</span><span class="token punctuation">{</span>   
+    <span class="token annotation punctuation">@Override</span>   
+    <span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">run</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">{</span>   
+        <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token class-name">Thread</span><span class="token punctuation">.</span><span class="token function">currentThread</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">getName</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">+</span> <span class="token string">"正在执行。。。"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>   
+        <span class="token keyword">try</span><span class="token punctuation">{</span>   
+            <span class="token class-name">Thread</span><span class="token punctuation">.</span><span class="token function">sleep</span><span class="token punctuation">(</span><span class="token number">100</span><span class="token punctuation">)</span><span class="token punctuation">;</span>   
+        <span class="token punctuation">}</span><span class="token keyword">catch</span><span class="token punctuation">(</span><span class="token class-name">InterruptedException</span> e<span class="token punctuation">)</span><span class="token punctuation">{</span>   
+            e<span class="token punctuation">.</span><span class="token function">printStackTrace</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>   
+        <span class="token punctuation">}</span>   
+    <span class="token punctuation">}</span>   
+<span class="token punctuation">}</span>  <span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p>运行结果如下：</p>
+<p><img src= "data:image/gif;base64,R0lGODdhAQABAPAAAMPDwwAAACwAAAAAAQABAAACAkQBADs=" data-lazy-src="https://gitee.com/gsshy/picgo/raw/master/img/image-20210323105726043.png" alt="image-20210323105726043"></p>
+<h3 id="6、比较Executor和new-Thread"><a href="#6、比较Executor和new-Thread" class="headerlink" title="6、比较Executor和new Thread()"></a>6、比较Executor和new Thread()</h3><p>new Thread的弊端如下：</p>
+<ul>
+<li>每次new Thread新建对象性能差。</li>
+<li>线程缺乏统一管理，可能无限制新建线程，相互之间竞争，及可能占用过多系统资源导致死机或oom。</li>
+<li>缺乏更多功能，如定时执行、定期执行、线程中断。</li>
+</ul>
+<p>相比new Thread，Java提供的四种线程池的好处在于：</p>
+<ul>
+<li> 重用存在的线程，减少对象创建、消亡的开销，性能佳。</li>
+<li>可有效控制最大并发线程数，提高系统资源的使用率，同时避免过多资源竞争，避免堵塞。</li>
+<li>提供定时执行、定期执行、单线程、并发数控制等功能。</li>
+</ul>
+<h2 id="二、ExecutorService和ThreadPoolExecutor"><a href="#二、ExecutorService和ThreadPoolExecutor" class="headerlink" title="二、ExecutorService和ThreadPoolExecutor"></a>二、ExecutorService和ThreadPoolExecutor</h2><h3 id="1、创建线程池有两种方式"><a href="#1、创建线程池有两种方式" class="headerlink" title="1、创建线程池有两种方式"></a>1、创建线程池有两种方式</h3><p><img src= "data:image/gif;base64,R0lGODdhAQABAPAAAMPDwwAAACwAAAAAAQABAAACAkQBADs=" data-lazy-src="https://gitee.com/gsshy/picgo/raw/master/img/image-20210323110453172.png" alt="image-20210323110453172"></p>
+<ol>
+<li><p>通过ThreadPoolExecutor构造函数(推荐)</p>
+<pre class="line-numbers language-java" data-language="java"><code class="language-java"><span class="token keyword">import</span> <span class="token namespace">java<span class="token punctuation">.</span>util<span class="token punctuation">.</span>concurrent<span class="token punctuation">.</span></span><span class="token class-name">ArrayBlockingQueue</span><span class="token punctuation">;</span>
+<span class="token keyword">import</span> <span class="token namespace">java<span class="token punctuation">.</span>util<span class="token punctuation">.</span>concurrent<span class="token punctuation">.</span></span><span class="token class-name">ThreadPoolExecutor</span><span class="token punctuation">;</span>
+<span class="token keyword">import</span> <span class="token namespace">java<span class="token punctuation">.</span>util<span class="token punctuation">.</span>concurrent<span class="token punctuation">.</span></span><span class="token class-name">TimeUnit</span><span class="token punctuation">;</span>
+
+<span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">ThreadPoolExecutorDemo</span> <span class="token punctuation">{</span>
+
+    <span class="token keyword">private</span> <span class="token keyword">static</span> <span class="token keyword">final</span> <span class="token keyword">int</span> CORE_POOL_SIZE <span class="token operator">=</span> <span class="token number">5</span><span class="token punctuation">;</span>
+    <span class="token keyword">private</span> <span class="token keyword">static</span> <span class="token keyword">final</span> <span class="token keyword">int</span> MAX_POOL_SIZE <span class="token operator">=</span> <span class="token number">10</span><span class="token punctuation">;</span>
+    <span class="token keyword">private</span> <span class="token keyword">static</span> <span class="token keyword">final</span> <span class="token keyword">int</span> QUEUE_CAPACITY <span class="token operator">=</span> <span class="token number">100</span><span class="token punctuation">;</span>
+    <span class="token keyword">private</span> <span class="token keyword">static</span> <span class="token keyword">final</span> <span class="token class-name">Long</span> KEEP_ALIVE_TIME <span class="token operator">=</span> <span class="token number">1L</span><span class="token punctuation">;</span>
+    <span class="token keyword">public</span> <span class="token keyword">static</span> <span class="token keyword">void</span> <span class="token function">main</span><span class="token punctuation">(</span><span class="token class-name">String</span><span class="token punctuation">[</span><span class="token punctuation">]</span> args<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+
+        <span class="token comment">//使用阿里巴巴推荐的创建线程池的方式</span>
+        <span class="token comment">//通过ThreadPoolExecutor构造函数自定义参数创建</span>
+        <span class="token class-name">ThreadPoolExecutor</span> executor <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">ThreadPoolExecutor</span><span class="token punctuation">(</span>
+                CORE_POOL_SIZE<span class="token punctuation">,</span>
+                MAX_POOL_SIZE<span class="token punctuation">,</span>
+                KEEP_ALIVE_TIME<span class="token punctuation">,</span>
+                <span class="token class-name">TimeUnit</span><span class="token punctuation">.</span>SECONDS<span class="token punctuation">,</span>
+                <span class="token keyword">new</span> <span class="token class-name">ArrayBlockingQueue</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token punctuation">&gt;</span></span><span class="token punctuation">(</span>QUEUE_CAPACITY<span class="token punctuation">)</span><span class="token punctuation">,</span>
+                <span class="token keyword">new</span> <span class="token class-name">ThreadPoolExecutor</span><span class="token punctuation">.</span><span class="token class-name">CallerRunsPolicy</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+        <span class="token keyword">for</span> <span class="token punctuation">(</span><span class="token keyword">int</span> i <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span> i <span class="token operator">&lt;</span> <span class="token number">10</span><span class="token punctuation">;</span> i<span class="token operator">++</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+            <span class="token comment">//创建WorkerThread对象（WorkerThread类实现了Runnable 接口）</span>
+            <span class="token class-name">Runnable</span> worker <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">MyRunnable</span><span class="token punctuation">(</span><span class="token string">""</span> <span class="token operator">+</span> i<span class="token punctuation">)</span><span class="token punctuation">;</span>
+            <span class="token comment">//执行Runnable</span>
+            executor<span class="token punctuation">.</span><span class="token function">execute</span><span class="token punctuation">(</span>worker<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token punctuation">}</span>
+        <span class="token comment">//终止线程池</span>
+        executor<span class="token punctuation">.</span><span class="token function">shutdown</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token keyword">while</span> <span class="token punctuation">(</span><span class="token operator">!</span>executor<span class="token punctuation">.</span><span class="token function">isTerminated</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token punctuation">}</span>
+        <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token string">"Finished all threads"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+<span class="token punctuation">}</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p>corePoolSize: 核心线程数为 5。<br>maximumPoolSize ：最大线程数 10<br>keepAliveTime : 等待时间为 1L。<br>unit: 等待时间的单位为 TimeUnit.SECONDS。<br>workQueue：任务队列为 ArrayBlockingQueue，并且容量为 100;<br>handler:饱和策略为 CallerRunsPolicy。</p>
+<pre class="line-numbers language-java" data-language="java"><code class="language-java">output
+pool<span class="token operator">-</span><span class="token number">1</span><span class="token operator">-</span>thread<span class="token operator">-</span><span class="token number">3</span> <span class="token class-name">Start</span><span class="token punctuation">.</span> <span class="token class-name">Time</span> <span class="token operator">=</span> <span class="token class-name">Sun</span> <span class="token class-name">Apr</span> <span class="token number">12</span> <span class="token number">11</span><span class="token operator">:</span><span class="token number">14</span><span class="token operator">:</span><span class="token number">37</span> CST <span class="token number">2020</span>
+pool<span class="token operator">-</span><span class="token number">1</span><span class="token operator">-</span>thread<span class="token operator">-</span><span class="token number">5</span> <span class="token class-name">Start</span><span class="token punctuation">.</span> <span class="token class-name">Time</span> <span class="token operator">=</span> <span class="token class-name">Sun</span> <span class="token class-name">Apr</span> <span class="token number">12</span> <span class="token number">11</span><span class="token operator">:</span><span class="token number">14</span><span class="token operator">:</span><span class="token number">37</span> CST <span class="token number">2020</span>
+pool<span class="token operator">-</span><span class="token number">1</span><span class="token operator">-</span>thread<span class="token operator">-</span><span class="token number">2</span> <span class="token class-name">Start</span><span class="token punctuation">.</span> <span class="token class-name">Time</span> <span class="token operator">=</span> <span class="token class-name">Sun</span> <span class="token class-name">Apr</span> <span class="token number">12</span> <span class="token number">11</span><span class="token operator">:</span><span class="token number">14</span><span class="token operator">:</span><span class="token number">37</span> CST <span class="token number">2020</span>
+pool<span class="token operator">-</span><span class="token number">1</span><span class="token operator">-</span>thread<span class="token operator">-</span><span class="token number">1</span> <span class="token class-name">Start</span><span class="token punctuation">.</span> <span class="token class-name">Time</span> <span class="token operator">=</span> <span class="token class-name">Sun</span> <span class="token class-name">Apr</span> <span class="token number">12</span> <span class="token number">11</span><span class="token operator">:</span><span class="token number">14</span><span class="token operator">:</span><span class="token number">37</span> CST <span class="token number">2020</span>
+pool<span class="token operator">-</span><span class="token number">1</span><span class="token operator">-</span>thread<span class="token operator">-</span><span class="token number">4</span> <span class="token class-name">Start</span><span class="token punctuation">.</span> <span class="token class-name">Time</span> <span class="token operator">=</span> <span class="token class-name">Sun</span> <span class="token class-name">Apr</span> <span class="token number">12</span> <span class="token number">11</span><span class="token operator">:</span><span class="token number">14</span><span class="token operator">:</span><span class="token number">37</span> CST <span class="token number">2020</span>
+pool<span class="token operator">-</span><span class="token number">1</span><span class="token operator">-</span>thread<span class="token operator">-</span><span class="token number">3</span> <span class="token class-name">End</span><span class="token punctuation">.</span> <span class="token class-name">Time</span> <span class="token operator">=</span> <span class="token class-name">Sun</span> <span class="token class-name">Apr</span> <span class="token number">12</span> <span class="token number">11</span><span class="token operator">:</span><span class="token number">14</span><span class="token operator">:</span><span class="token number">42</span> CST <span class="token number">2020</span>
+pool<span class="token operator">-</span><span class="token number">1</span><span class="token operator">-</span>thread<span class="token operator">-</span><span class="token number">4</span> <span class="token class-name">End</span><span class="token punctuation">.</span> <span class="token class-name">Time</span> <span class="token operator">=</span> <span class="token class-name">Sun</span> <span class="token class-name">Apr</span> <span class="token number">12</span> <span class="token number">11</span><span class="token operator">:</span><span class="token number">14</span><span class="token operator">:</span><span class="token number">42</span> CST <span class="token number">2020</span>
+pool<span class="token operator">-</span><span class="token number">1</span><span class="token operator">-</span>thread<span class="token operator">-</span><span class="token number">1</span> <span class="token class-name">End</span><span class="token punctuation">.</span> <span class="token class-name">Time</span> <span class="token operator">=</span> <span class="token class-name">Sun</span> <span class="token class-name">Apr</span> <span class="token number">12</span> <span class="token number">11</span><span class="token operator">:</span><span class="token number">14</span><span class="token operator">:</span><span class="token number">42</span> CST <span class="token number">2020</span>
+pool<span class="token operator">-</span><span class="token number">1</span><span class="token operator">-</span>thread<span class="token operator">-</span><span class="token number">5</span> <span class="token class-name">End</span><span class="token punctuation">.</span> <span class="token class-name">Time</span> <span class="token operator">=</span> <span class="token class-name">Sun</span> <span class="token class-name">Apr</span> <span class="token number">12</span> <span class="token number">11</span><span class="token operator">:</span><span class="token number">14</span><span class="token operator">:</span><span class="token number">42</span> CST <span class="token number">2020</span>
+pool<span class="token operator">-</span><span class="token number">1</span><span class="token operator">-</span>thread<span class="token operator">-</span><span class="token number">1</span> <span class="token class-name">Start</span><span class="token punctuation">.</span> <span class="token class-name">Time</span> <span class="token operator">=</span> <span class="token class-name">Sun</span> <span class="token class-name">Apr</span> <span class="token number">12</span> <span class="token number">11</span><span class="token operator">:</span><span class="token number">14</span><span class="token operator">:</span><span class="token number">42</span> CST <span class="token number">2020</span>
+pool<span class="token operator">-</span><span class="token number">1</span><span class="token operator">-</span>thread<span class="token operator">-</span><span class="token number">2</span> <span class="token class-name">End</span><span class="token punctuation">.</span> <span class="token class-name">Time</span> <span class="token operator">=</span> <span class="token class-name">Sun</span> <span class="token class-name">Apr</span> <span class="token number">12</span> <span class="token number">11</span><span class="token operator">:</span><span class="token number">14</span><span class="token operator">:</span><span class="token number">42</span> CST <span class="token number">2020</span>
+pool<span class="token operator">-</span><span class="token number">1</span><span class="token operator">-</span>thread<span class="token operator">-</span><span class="token number">5</span> <span class="token class-name">Start</span><span class="token punctuation">.</span> <span class="token class-name">Time</span> <span class="token operator">=</span> <span class="token class-name">Sun</span> <span class="token class-name">Apr</span> <span class="token number">12</span> <span class="token number">11</span><span class="token operator">:</span><span class="token number">14</span><span class="token operator">:</span><span class="token number">42</span> CST <span class="token number">2020</span>
+pool<span class="token operator">-</span><span class="token number">1</span><span class="token operator">-</span>thread<span class="token operator">-</span><span class="token number">4</span> <span class="token class-name">Start</span><span class="token punctuation">.</span> <span class="token class-name">Time</span> <span class="token operator">=</span> <span class="token class-name">Sun</span> <span class="token class-name">Apr</span> <span class="token number">12</span> <span class="token number">11</span><span class="token operator">:</span><span class="token number">14</span><span class="token operator">:</span><span class="token number">42</span> CST <span class="token number">2020</span>
+pool<span class="token operator">-</span><span class="token number">1</span><span class="token operator">-</span>thread<span class="token operator">-</span><span class="token number">3</span> <span class="token class-name">Start</span><span class="token punctuation">.</span> <span class="token class-name">Time</span> <span class="token operator">=</span> <span class="token class-name">Sun</span> <span class="token class-name">Apr</span> <span class="token number">12</span> <span class="token number">11</span><span class="token operator">:</span><span class="token number">14</span><span class="token operator">:</span><span class="token number">42</span> CST <span class="token number">2020</span>
+pool<span class="token operator">-</span><span class="token number">1</span><span class="token operator">-</span>thread<span class="token operator">-</span><span class="token number">2</span> <span class="token class-name">Start</span><span class="token punctuation">.</span> <span class="token class-name">Time</span> <span class="token operator">=</span> <span class="token class-name">Sun</span> <span class="token class-name">Apr</span> <span class="token number">12</span> <span class="token number">11</span><span class="token operator">:</span><span class="token number">14</span><span class="token operator">:</span><span class="token number">42</span> CST <span class="token number">2020</span>
+pool<span class="token operator">-</span><span class="token number">1</span><span class="token operator">-</span>thread<span class="token operator">-</span><span class="token number">1</span> <span class="token class-name">End</span><span class="token punctuation">.</span> <span class="token class-name">Time</span> <span class="token operator">=</span> <span class="token class-name">Sun</span> <span class="token class-name">Apr</span> <span class="token number">12</span> <span class="token number">11</span><span class="token operator">:</span><span class="token number">14</span><span class="token operator">:</span><span class="token number">47</span> CST <span class="token number">2020</span>
+pool<span class="token operator">-</span><span class="token number">1</span><span class="token operator">-</span>thread<span class="token operator">-</span><span class="token number">4</span> <span class="token class-name">End</span><span class="token punctuation">.</span> <span class="token class-name">Time</span> <span class="token operator">=</span> <span class="token class-name">Sun</span> <span class="token class-name">Apr</span> <span class="token number">12</span> <span class="token number">11</span><span class="token operator">:</span><span class="token number">14</span><span class="token operator">:</span><span class="token number">47</span> CST <span class="token number">2020</span>
+pool<span class="token operator">-</span><span class="token number">1</span><span class="token operator">-</span>thread<span class="token operator">-</span><span class="token number">5</span> <span class="token class-name">End</span><span class="token punctuation">.</span> <span class="token class-name">Time</span> <span class="token operator">=</span> <span class="token class-name">Sun</span> <span class="token class-name">Apr</span> <span class="token number">12</span> <span class="token number">11</span><span class="token operator">:</span><span class="token number">14</span><span class="token operator">:</span><span class="token number">47</span> CST <span class="token number">2020</span>
+pool<span class="token operator">-</span><span class="token number">1</span><span class="token operator">-</span>thread<span class="token operator">-</span><span class="token number">3</span> <span class="token class-name">End</span><span class="token punctuation">.</span> <span class="token class-name">Time</span> <span class="token operator">=</span> <span class="token class-name">Sun</span> <span class="token class-name">Apr</span> <span class="token number">12</span> <span class="token number">11</span><span class="token operator">:</span><span class="token number">14</span><span class="token operator">:</span><span class="token number">47</span> CST <span class="token number">2020</span>
+pool<span class="token operator">-</span><span class="token number">1</span><span class="token operator">-</span>thread<span class="token operator">-</span><span class="token number">2</span> <span class="token class-name">End</span><span class="token punctuation">.</span> <span class="token class-name">Time</span> <span class="token operator">=</span> <span class="token class-name">Sun</span> <span class="token class-name">Apr</span> <span class="token number">12</span> <span class="token number">11</span><span class="token operator">:</span><span class="token number">14</span><span class="token operator">:</span><span class="token number">47</span> CST <span class="token number">2020</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+</li>
+<li><p>通过Executor框架的Executors创建</p>
+<p>Executors返回的是ExecutorService</p>
+<p><img src= "data:image/gif;base64,R0lGODdhAQABAPAAAMPDwwAAACwAAAAAAQABAAACAkQBADs=" data-lazy-src="https://gitee.com/gsshy/picgo/raw/master/img/image-20210323111609960.png" alt="image-20210323111609960"></p>
+</li>
+</ol>
+<h3 id="2、ExecutorService"><a href="#2、ExecutorService" class="headerlink" title="2、ExecutorService"></a>2、ExecutorService</h3><p>Java.util.concurrent.ExecutorService接口代表一种异步执行机制，它能够在后台执行任务。因此ExecutorService与thread pool是非常相似的。事实上，在java.util.package包中ExecutorService的具体实现就是一个线程池的具体实现。下面是一个简单的例子：</p>
+<pre class="line-numbers language-java" data-language="java"><code class="language-java"><span class="token class-name">ExecutorService</span> executorService <span class="token operator">=</span> <span class="token class-name">Executors</span><span class="token punctuation">.</span><span class="token function">newFixedThreadPool</span><span class="token punctuation">(</span><span class="token number">10</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+ 
+executorService<span class="token punctuation">.</span><span class="token function">execute</span><span class="token punctuation">(</span><span class="token keyword">new</span> <span class="token class-name">Runnable</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">run</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token string">"Asynchronous task"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+ 
+executorService<span class="token punctuation">.</span><span class="token function">shutdown</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p>首先，通过newFixedThreadPool()工厂方法创建一个ExecutorService的实例。这个方法创建了一个可以有10个线程执行任务的线程池。</p>
+<p>第二，Runnable接口的匿名实现类作为参数被传递给execute()方法。Runable将会被ExecutorService中的一个线程来执行。</p>
+<p>下面是委托任务给ExecutorService的一些不同的方式：</p>
+<ul>
+<li>execute(Runnable)</li>
+<li>submit(Runnable)</li>
+<li>submit(Callable)</li>
+<li>invokeAny(…)</li>
+<li>invokeAll(…)</li>
+</ul>
+<p>下面来逐个看看这些方法。</p>
+<ul>
+<li>execute(Runnable)</li>
+</ul>
+<p>execute(Runnable) 方法接受一个java.lang.Runable对象的实例，并异步执行之。下面是一个使用ExecutorService执行Runnable的例子：</p>
+<pre class="line-numbers language-java" data-language="java"><code class="language-java"><span class="token class-name">ExecutorService</span> executorService <span class="token operator">=</span> <span class="token class-name">Executors</span><span class="token punctuation">.</span><span class="token function">newSingleThreadExecutor</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+ 
+executorService<span class="token punctuation">.</span><span class="token function">execute</span><span class="token punctuation">(</span><span class="token keyword">new</span> <span class="token class-name">Runnable</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">run</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token string">"Asynchronous task"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+ 
+executorService<span class="token punctuation">.</span><span class="token function">shutdown</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p>这种方式不能获得Runnable执行的结果，如果有这种需要，你将要使用Callable。</p>
+<ul>
+<li>submit(Runnable)</li>
+</ul>
+<p>submit(Runnable) 方法也接收一个Runnable接口的具体实现，并返回一个Future对象。Future对象可以用来检测Runable是否执行完成。</p>
+<pre class="line-numbers language-java" data-language="java"><code class="language-java"><span class="token class-name">Future</span> future <span class="token operator">=</span> executorService<span class="token punctuation">.</span><span class="token function">submit</span><span class="token punctuation">(</span><span class="token keyword">new</span> <span class="token class-name">Runnable</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">run</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token string">"Asynchronous task"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+ 
+future<span class="token punctuation">.</span><span class="token function">get</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>  <span class="token comment">//returns null if the task has finished correctly.</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<ul>
+<li>submit(Callable)</li>
+</ul>
+<p>submit(Callable)方法与submit(Runnable)方法相似，除了接收的参数有所不同。Callable实例非常类似于Runnable,不同的是call方法可以返回一个结果，Runnable.run()方法不能返回一个结果(因为是void类型)，就算线程执行完了，成功了future.get()也只是得到null</p>
+<p>可以通过submit(Callable)方法返回的Future对象获取Callable的结果。下面是一个使用Callable的例子：</p>
+<pre class="line-numbers language-java" data-language="java"><code class="language-java"><span class="token class-name">Future</span> future <span class="token operator">=</span> executorService<span class="token punctuation">.</span><span class="token function">submit</span><span class="token punctuation">(</span><span class="token keyword">new</span> <span class="token class-name">Callable</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">{</span>
+    <span class="token keyword">public</span> <span class="token class-name">Object</span> <span class="token function">call</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token keyword">throws</span> <span class="token class-name">Exception</span> <span class="token punctuation">{</span>
+        <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token string">"Asynchronous Callable"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token keyword">return</span> <span class="token string">"Callable Result"</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+ 
+<span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token string">"future.get() = "</span> <span class="token operator">+</span> future<span class="token punctuation">.</span><span class="token function">get</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p>上面代码的输出结果是：</p>
+<pre class="line-numbers language-java" data-language="java"><code class="language-java"><span class="token class-name">Asynchronous</span> <span class="token class-name">Callable</span>
+future<span class="token punctuation">.</span><span class="token function">get</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=</span> <span class="token class-name">Callable</span> <span class="token class-name">Result</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
+
+<ul>
+<li>invokeAny(…)</li>
+</ul>
+<p>invokeAny()方法接收一个Callable对象或者Callable的子接口实例的集合作为参数，这个方法不会返回Future,但会返回集合中某一个Callable的结果。你不能确定你得到是哪个Callable的结果。只是已执行完成的Callable中的一个。</p>
+<p>如果一个任务已经完成（或者抛出了异常），剩余的Callable任务将被取消。<br>下面是示例代码：</p>
+<pre class="line-numbers language-java" data-language="java"><code class="language-java"><span class="token class-name">ExecutorService</span> executorService <span class="token operator">=</span> <span class="token class-name">Executors</span><span class="token punctuation">.</span><span class="token function">newSingleThreadExecutor</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+ 
+<span class="token class-name">Set</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token class-name">Callable</span><span class="token punctuation">&lt;</span><span class="token class-name">String</span><span class="token punctuation">&gt;</span><span class="token punctuation">&gt;</span></span> callables <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">HashSet</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token class-name">Callable</span><span class="token punctuation">&lt;</span><span class="token class-name">String</span><span class="token punctuation">&gt;</span><span class="token punctuation">&gt;</span></span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+ 
+callables<span class="token punctuation">.</span><span class="token function">add</span><span class="token punctuation">(</span><span class="token keyword">new</span> <span class="token class-name">Callable</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token class-name">String</span><span class="token punctuation">&gt;</span></span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">public</span> <span class="token class-name">String</span> <span class="token function">call</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token keyword">throws</span> <span class="token class-name">Exception</span> <span class="token punctuation">{</span>
+        <span class="token keyword">return</span> <span class="token string">"Task 1"</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+callables<span class="token punctuation">.</span><span class="token function">add</span><span class="token punctuation">(</span><span class="token keyword">new</span> <span class="token class-name">Callable</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token class-name">String</span><span class="token punctuation">&gt;</span></span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">public</span> <span class="token class-name">String</span> <span class="token function">call</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token keyword">throws</span> <span class="token class-name">Exception</span> <span class="token punctuation">{</span>
+        <span class="token keyword">return</span> <span class="token string">"Task 2"</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+callables<span class="token punctuation">.</span><span class="token function">add</span><span class="token punctuation">(</span><span class="token keyword">new</span> <span class="token class-name">Callable</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token class-name">String</span><span class="token punctuation">&gt;</span></span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">public</span> <span class="token class-name">String</span> <span class="token function">call</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token keyword">throws</span> <span class="token class-name">Exception</span> <span class="token punctuation">{</span>
+        <span class="token keyword">return</span> <span class="token string">"Task 3"</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+ 
+<span class="token class-name">String</span> result <span class="token operator">=</span> executorService<span class="token punctuation">.</span><span class="token function">invokeAny</span><span class="token punctuation">(</span>callables<span class="token punctuation">)</span><span class="token punctuation">;</span>
+ 
+<span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token string">"result = "</span> <span class="token operator">+</span> result<span class="token punctuation">)</span><span class="token punctuation">;</span>
+ 
+executorService<span class="token punctuation">.</span><span class="token function">shutdown</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<ul>
+<li><p>示例代码将会打印给定的Callable集合中一个Callable任务返回的结果。我尝试执行了多次，结果是变化的。有时候是“Task1”,有时候是“Task 2”等。</p>
+</li>
+<li></li>
+<li><p>invokeAll(…)</p>
+</li>
+</ul>
+<p>invokeAll()接收一个Callable对象的集合作为参数，该方法会调用你传给他的集合中的所有Callable对象。Invoke()会返回一个Future对象的列表，通过这个列表你可以获取每一个Callable执行的结果。</p>
+<p>一个任务可能会因为一个异常而结束，因此这时任务并不是真正意义上执行成功了。这在Future上是没有办法来判断的。</p>
+<p>处理一个任务的容器（collection），并返回一个Future的容器。两个容器具有相同的结构，这里提交的任务容器列表和返回的Future列表存在顺序对应的关系。</p>
+<p>下面是示例代码：</p>
+<pre class="line-numbers language-java" data-language="java"><code class="language-java"><span class="token class-name">ExecutorService</span> executorService <span class="token operator">=</span> <span class="token class-name">Executors</span><span class="token punctuation">.</span><span class="token function">newSingleThreadExecutor</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+ 
+<span class="token class-name">Set</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token class-name">Callable</span><span class="token punctuation">&lt;</span><span class="token class-name">String</span><span class="token punctuation">&gt;</span><span class="token punctuation">&gt;</span></span> callables <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">HashSet</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token class-name">Callable</span><span class="token punctuation">&lt;</span><span class="token class-name">String</span><span class="token punctuation">&gt;</span><span class="token punctuation">&gt;</span></span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+ 
+callables<span class="token punctuation">.</span><span class="token function">add</span><span class="token punctuation">(</span><span class="token keyword">new</span> <span class="token class-name">Callable</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token class-name">String</span><span class="token punctuation">&gt;</span></span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">public</span> <span class="token class-name">String</span> <span class="token function">call</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token keyword">throws</span> <span class="token class-name">Exception</span> <span class="token punctuation">{</span>
+        <span class="token keyword">return</span> <span class="token string">"Task 1"</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+callables<span class="token punctuation">.</span><span class="token function">add</span><span class="token punctuation">(</span><span class="token keyword">new</span> <span class="token class-name">Callable</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token class-name">String</span><span class="token punctuation">&gt;</span></span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">public</span> <span class="token class-name">String</span> <span class="token function">call</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token keyword">throws</span> <span class="token class-name">Exception</span> <span class="token punctuation">{</span>
+        <span class="token keyword">return</span> <span class="token string">"Task 2"</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+callables<span class="token punctuation">.</span><span class="token function">add</span><span class="token punctuation">(</span><span class="token keyword">new</span> <span class="token class-name">Callable</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token class-name">String</span><span class="token punctuation">&gt;</span></span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">public</span> <span class="token class-name">String</span> <span class="token function">call</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token keyword">throws</span> <span class="token class-name">Exception</span> <span class="token punctuation">{</span>
+        <span class="token keyword">return</span> <span class="token string">"Task 3"</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+ 
+<span class="token class-name">List</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token class-name">Future</span><span class="token punctuation">&lt;</span><span class="token class-name">String</span><span class="token punctuation">&gt;</span><span class="token punctuation">&gt;</span></span> futures <span class="token operator">=</span> executorService<span class="token punctuation">.</span><span class="token function">invokeAll</span><span class="token punctuation">(</span>callables<span class="token punctuation">)</span><span class="token punctuation">;</span>
+ 
+<span class="token keyword">for</span><span class="token punctuation">(</span><span class="token class-name">Future</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token class-name">String</span><span class="token punctuation">&gt;</span></span> future <span class="token operator">:</span> futures<span class="token punctuation">)</span><span class="token punctuation">{</span>
+    <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token string">"future.get = "</span> <span class="token operator">+</span> future<span class="token punctuation">.</span><span class="token function">get</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+ 
+executorService<span class="token punctuation">.</span><span class="token function">shutdown</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p><strong>ExecutorService Shutdown</strong></p>
+<p>当你是使用完ExecutorService后，你应该关闭它，使得线程不能持续运行。例如，你的应用程序从main()方法开始并且你的主线程退出应用程序，这时如果存在激活状态的ExecutorService，你的应用程序将仍然会保持运行。ExecutorService中激活的线程会阻止JVM关闭。</p>
+<p>为了终止ExecutorService中的线程，你需要调用shutdown()方法。ExecutorService不会立即关闭，但是它也不会接受新的任务，直到它里面的所有线程都执行完毕，ExecutorService才会关闭。所有提交到ExecutorService中的任务会在调用shutdown()方法之前被执行。</p>
+<p>如果你想立即关闭ExecutorService,你可以调用shutdownNow()方法。这将会尝试立即停止所有正在执行的任务，并且忽略所有提交的但未被处理的任务。对于正在执行的任务是不能确定的，也许它们停止了，也行它们执行直到结束。</p>
+<h3 id="3、ThreadPoolExecutor"><a href="#3、ThreadPoolExecutor" class="headerlink" title="3、ThreadPoolExecutor"></a>3、ThreadPoolExecutor</h3><p>Java.util.concurrent.ThreadPoolExecutor类是ExecutorSerivce接口的具体实现。ThreadPoolExecutor使用线程池中的一个线程来执行给定的任务（Runnable或者Runnable）。</p>
+<p>ThreadPoolExecutor内部的线程池包含不定数量的线程。池中线程的数量由下面的这些变量决定：</p>
+<ul>
+<li>corePoolSize</li>
+<li>maximumPoolSize</li>
+</ul>
+<p>当一个任务委托给线程池执行，此时如果池线程中线程数少于corePoolSize，即使池中有空闲的线程，线程池中也会创建一个新的线程。</p>
+<p>如果任务队列是满的，corePoolSize个线程或者更多的且少于maximumPoolSize的线程正在运行，也会创建一个新的线程来执行任务。</p>
+<p>下面图释ThreadPoolExecutor这种原理： </p>
+<p><img src= "data:image/gif;base64,R0lGODdhAQABAPAAAMPDwwAAACwAAAAAAQABAAACAkQBADs=" data-lazy-src="https://gitee.com/gsshy/picgo/raw/master/img/20160712174701471" alt="这里写图片描述"></p>
+<h4 id="创建ThreadPoolExecutor"><a href="#创建ThreadPoolExecutor" class="headerlink" title="创建ThreadPoolExecutor"></a>创建ThreadPoolExecutor</h4><p>ThreadPoolExecutor有多种构造函数。例如：</p>
+<pre class="line-numbers language-java" data-language="java"><code class="language-java"><span class="token keyword">int</span>  corePoolSize  <span class="token operator">=</span>    <span class="token number">5</span><span class="token punctuation">;</span>
+<span class="token keyword">int</span>  maxPoolSize   <span class="token operator">=</span>   <span class="token number">10</span><span class="token punctuation">;</span>
+<span class="token keyword">long</span> keepAliveTime <span class="token operator">=</span> <span class="token number">5000</span><span class="token punctuation">;</span>
+ 
+<span class="token class-name">ExecutorService</span> threadPoolExecutor <span class="token operator">=</span>
+        <span class="token keyword">new</span> <span class="token class-name">ThreadPoolExecutor</span><span class="token punctuation">(</span>
+                corePoolSize<span class="token punctuation">,</span>
+                maxPoolSize<span class="token punctuation">,</span>
+                keepAliveTime<span class="token punctuation">,</span>
+                <span class="token class-name">TimeUnit</span><span class="token punctuation">.</span>MILLISECONDS<span class="token punctuation">,</span>
+                <span class="token keyword">new</span> <span class="token class-name">LinkedBlockingQueue</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token class-name">Runnable</span><span class="token punctuation">&gt;</span></span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+                <span class="token punctuation">)</span><span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<h2 id="三、CompletionService"><a href="#三、CompletionService" class="headerlink" title="三、CompletionService"></a>三、CompletionService</h2><p><code>java.util.concurrent.CompletionService</code> 是对 <code>ExecutorService</code> 的一个功能增强封装，优化了获取异步操作结果的接口。</p>
+<h3 id="1、使用场景"><a href="#1、使用场景" class="headerlink" title="1、使用场景"></a>1、使用场景</h3><p>假设我们要向线程池提交一批任务，并获取任务结果。一般的方式是提交任务后，从线程池得到一批 <code>Future</code> 对象集合，然后依次调用其 <code>get()</code> 方法。</p>
+<p>这里有个问题：因为我们会要按固定的顺序来遍历 <code>Future</code> 元素，而 <code>get()</code> 方法又是阻塞的，因此如果某个 <code>Future</code> 对象执行时间太长，会使得我们的遍历过程阻塞在该元素上，无法及时从后面早已完成的 <code>Future</code> 当中取得结果。</p>
+<p><code>CompletionService</code> 解决了这个问题。它本身不包含线程池，创建一个 <code>CompletionService</code> 需要先创建一个 <code>Executor</code>。下面是一个例子：</p>
+<pre class="line-numbers language-java" data-language="java"><code class="language-java"><span class="token class-name">ExecutorService</span> executor <span class="token operator">=</span> <span class="token class-name">Executors</span><span class="token punctuation">.</span><span class="token function">newFixedThreadPool</span><span class="token punctuation">(</span><span class="token number">4</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token class-name">CompletionService</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token class-name">String</span><span class="token punctuation">&gt;</span></span> completionService <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">ExecutorCompletionService</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token punctuation">&gt;</span></span><span class="token punctuation">(</span>executor<span class="token punctuation">)</span><span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
+
+<p>向 <code>CompletionService</code> 提交任务的方式与 <code>ExecutorService</code> 一样：</p>
+<pre class="line-numbers language-java" data-language="java"><code class="language-java">completionService<span class="token punctuation">.</span><span class="token function">submit</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">-&gt;</span> <span class="token string">"Hello"</span><span class="token punctuation">)</span><span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+
+<p>当你需要获得结果的时候，就不同了。有了 <code>CompletionService</code>，你不需要再持有 <code>Future</code> 集合。如果要得到最早的执行结果，只需要像下面这样：</p>
+<pre class="line-numbers language-java" data-language="java"><code class="language-java"><span class="token class-name">String</span> result <span class="token operator">=</span> completionService<span class="token punctuation">.</span><span class="token function">take</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">get</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+
+<p>这个 <code>take()</code> 方法返回的是最早完成的任务的结果，这个就解决了一个任务被另一个任务阻塞的问题。下面是一个完整的例子：</p>
+<h3 id="2、示例（更好的可以看代码里的测试内容）"><a href="#2、示例（更好的可以看代码里的测试内容）" class="headerlink" title="2、示例（更好的可以看代码里的测试内容）"></a>2、示例（更好的可以看代码里的测试内容）</h3><pre class="line-numbers language-java" data-language="java"><code class="language-java"><span class="token keyword">public</span> <span class="token keyword">static</span> <span class="token keyword">void</span> <span class="token function">main</span><span class="token punctuation">(</span><span class="token class-name">String</span><span class="token punctuation">[</span><span class="token punctuation">]</span> args<span class="token punctuation">)</span> <span class="token keyword">throws</span> <span class="token class-name">Exception</span> <span class="token punctuation">{</span>
+
+    <span class="token class-name">ExecutorService</span> executor<span class="token punctuation">;</span>
+    <span class="token class-name">CompletionService</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token class-name">String</span><span class="token punctuation">&gt;</span></span> completionService<span class="token punctuation">;</span>
+
+    <span class="token comment">// 创建一个指定执行时长的任务的方法</span>
+    <span class="token class-name">BiFunction</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token class-name">Integer</span><span class="token punctuation">,</span> <span class="token class-name">Integer</span><span class="token punctuation">,</span> <span class="token class-name">Callable</span><span class="token punctuation">&lt;</span><span class="token class-name">String</span><span class="token punctuation">&gt;</span><span class="token punctuation">&gt;</span></span> createTask <span class="token operator">=</span> <span class="token punctuation">(</span>id<span class="token punctuation">,</span> duration<span class="token punctuation">)</span> <span class="token operator">-&gt;</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">-&gt;</span> <span class="token punctuation">{</span>
+        <span class="token function">log</span><span class="token punctuation">(</span><span class="token string">"Task "</span> <span class="token operator">+</span> id <span class="token operator">+</span> <span class="token string">" started, duration="</span> <span class="token operator">+</span> duration<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token class-name">Thread</span><span class="token punctuation">.</span><span class="token function">sleep</span><span class="token punctuation">(</span>duration<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token function">log</span><span class="token punctuation">(</span><span class="token string">"Task "</span> <span class="token operator">+</span> id <span class="token operator">+</span> <span class="token string">" completed."</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token keyword">return</span> <span class="token string">"Result of task "</span> <span class="token operator">+</span> id<span class="token punctuation">;</span>
+    <span class="token punctuation">}</span><span class="token punctuation">;</span>
+
+    <span class="token comment">///////////////////////////////////////////////////////////////////</span>
+    <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token string">"// 示例1：像使用 ExecutorService 一样使用 CompletionService"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+    <span class="token comment">// 初始化 executor 和 completionService</span>
+    executor <span class="token operator">=</span> <span class="token class-name">Executors</span><span class="token punctuation">.</span><span class="token function">newFixedThreadPool</span><span class="token punctuation">(</span><span class="token number">4</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    completionService <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">ExecutorCompletionService</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token punctuation">&gt;</span></span><span class="token punctuation">(</span>executor<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+    <span class="token comment">// 提交任务</span>
+    <span class="token class-name">List</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token class-name">Future</span><span class="token punctuation">&lt;</span><span class="token class-name">String</span><span class="token punctuation">&gt;</span><span class="token punctuation">&gt;</span></span> results <span class="token operator">=</span> <span class="token class-name">Arrays</span><span class="token punctuation">.</span><span class="token function">asList</span><span class="token punctuation">(</span>
+            completionService<span class="token punctuation">.</span><span class="token function">submit</span><span class="token punctuation">(</span>createTask<span class="token punctuation">.</span><span class="token function">apply</span><span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">,</span> <span class="token number">1000</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+            completionService<span class="token punctuation">.</span><span class="token function">submit</span><span class="token punctuation">(</span>createTask<span class="token punctuation">.</span><span class="token function">apply</span><span class="token punctuation">(</span><span class="token number">2</span><span class="token punctuation">,</span> <span class="token number">800</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+            completionService<span class="token punctuation">.</span><span class="token function">submit</span><span class="token punctuation">(</span>createTask<span class="token punctuation">.</span><span class="token function">apply</span><span class="token punctuation">(</span><span class="token number">3</span><span class="token punctuation">,</span> <span class="token number">600</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+            completionService<span class="token punctuation">.</span><span class="token function">submit</span><span class="token punctuation">(</span>createTask<span class="token punctuation">.</span><span class="token function">apply</span><span class="token punctuation">(</span><span class="token number">4</span><span class="token punctuation">,</span> <span class="token number">400</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+    <span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+    <span class="token comment">// 取结果</span>
+    <span class="token keyword">for</span> <span class="token punctuation">(</span><span class="token class-name">Future</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token class-name">String</span><span class="token punctuation">&gt;</span></span> result <span class="token operator">:</span> results<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token function">log</span><span class="token punctuation">(</span>result<span class="token punctuation">.</span><span class="token function">get</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+
+    executor<span class="token punctuation">.</span><span class="token function">shutdown</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+    <span class="token comment">///////////////////////////////////////////////////////////////////</span>
+    <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token string">"// 示例2：按标准方式使用 CompletionService"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+    <span class="token comment">// 初始化 executor 和 completionService</span>
+    executor <span class="token operator">=</span> <span class="token class-name">Executors</span><span class="token punctuation">.</span><span class="token function">newFixedThreadPool</span><span class="token punctuation">(</span><span class="token number">4</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    completionService <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">ExecutorCompletionService</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token punctuation">&gt;</span></span><span class="token punctuation">(</span>executor<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+    <span class="token comment">// 提交任务</span>
+    completionService<span class="token punctuation">.</span><span class="token function">submit</span><span class="token punctuation">(</span>createTask<span class="token punctuation">.</span><span class="token function">apply</span><span class="token punctuation">(</span><span class="token number">5</span><span class="token punctuation">,</span> <span class="token number">1000</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    completionService<span class="token punctuation">.</span><span class="token function">submit</span><span class="token punctuation">(</span>createTask<span class="token punctuation">.</span><span class="token function">apply</span><span class="token punctuation">(</span><span class="token number">6</span><span class="token punctuation">,</span> <span class="token number">800</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    completionService<span class="token punctuation">.</span><span class="token function">submit</span><span class="token punctuation">(</span>createTask<span class="token punctuation">.</span><span class="token function">apply</span><span class="token punctuation">(</span><span class="token number">7</span><span class="token punctuation">,</span> <span class="token number">600</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    completionService<span class="token punctuation">.</span><span class="token function">submit</span><span class="token punctuation">(</span>createTask<span class="token punctuation">.</span><span class="token function">apply</span><span class="token punctuation">(</span><span class="token number">8</span><span class="token punctuation">,</span> <span class="token number">400</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+    <span class="token comment">// 取结果</span>
+    <span class="token keyword">for</span> <span class="token punctuation">(</span><span class="token keyword">int</span> i <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span> i <span class="token operator">&lt;</span> <span class="token number">4</span><span class="token punctuation">;</span> i<span class="token operator">++</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token function">log</span><span class="token punctuation">(</span>completionService<span class="token punctuation">.</span><span class="token function">take</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">get</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+
+    <span class="token comment">///////////////////////////////////////////////////////////////////</span>
+    executor<span class="token punctuation">.</span><span class="token function">shutdown</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p>这个例子的执行结果如下所示：</p>
+<pre class="line-numbers language-java" data-language="java"><code class="language-java"><span class="token comment">// 示例1：像使用 ExecutorService 一样使用 CompletionService</span>
+<span class="token number">10</span><span class="token operator">:</span><span class="token number">22</span><span class="token operator">:</span><span class="token number">32</span><span class="token operator">:</span><span class="token number">271</span> <span class="token operator">-</span> <span class="token class-name">Task</span> <span class="token number">4</span> started<span class="token punctuation">,</span> duration<span class="token operator">=</span><span class="token number">400</span>
+<span class="token number">10</span><span class="token operator">:</span><span class="token number">22</span><span class="token operator">:</span><span class="token number">32</span><span class="token operator">:</span><span class="token number">271</span> <span class="token operator">-</span> <span class="token class-name">Task</span> <span class="token number">3</span> started<span class="token punctuation">,</span> duration<span class="token operator">=</span><span class="token number">600</span>
+<span class="token number">10</span><span class="token operator">:</span><span class="token number">22</span><span class="token operator">:</span><span class="token number">32</span><span class="token operator">:</span><span class="token number">271</span> <span class="token operator">-</span> <span class="token class-name">Task</span> <span class="token number">2</span> started<span class="token punctuation">,</span> duration<span class="token operator">=</span><span class="token number">800</span>
+<span class="token number">10</span><span class="token operator">:</span><span class="token number">22</span><span class="token operator">:</span><span class="token number">32</span><span class="token operator">:</span><span class="token number">271</span> <span class="token operator">-</span> <span class="token class-name">Task</span> <span class="token number">1</span> started<span class="token punctuation">,</span> duration<span class="token operator">=</span><span class="token number">1000</span>
+<span class="token number">10</span><span class="token operator">:</span><span class="token number">22</span><span class="token operator">:</span><span class="token number">32</span><span class="token operator">:</span><span class="token number">687</span> <span class="token operator">-</span> <span class="token class-name">Task</span> <span class="token number">4</span> completed<span class="token punctuation">.</span>
+<span class="token number">10</span><span class="token operator">:</span><span class="token number">22</span><span class="token operator">:</span><span class="token number">32</span><span class="token operator">:</span><span class="token number">888</span> <span class="token operator">-</span> <span class="token class-name">Task</span> <span class="token number">3</span> completed<span class="token punctuation">.</span>
+<span class="token number">10</span><span class="token operator">:</span><span class="token number">22</span><span class="token operator">:</span><span class="token number">33</span><span class="token operator">:</span><span class="token number">089</span> <span class="token operator">-</span> <span class="token class-name">Task</span> <span class="token number">2</span> completed<span class="token punctuation">.</span>
+<span class="token number">10</span><span class="token operator">:</span><span class="token number">22</span><span class="token operator">:</span><span class="token number">33</span><span class="token operator">:</span><span class="token number">303</span> <span class="token operator">-</span> <span class="token class-name">Task</span> <span class="token number">1</span> completed<span class="token punctuation">.</span>
+<span class="token number">10</span><span class="token operator">:</span><span class="token number">22</span><span class="token operator">:</span><span class="token number">33</span><span class="token operator">:</span><span class="token number">303</span> <span class="token operator">-</span> <span class="token class-name">Result</span> of task <span class="token number">1</span>
+<span class="token number">10</span><span class="token operator">:</span><span class="token number">22</span><span class="token operator">:</span><span class="token number">33</span><span class="token operator">:</span><span class="token number">303</span> <span class="token operator">-</span> <span class="token class-name">Result</span> of task <span class="token number">2</span>
+<span class="token number">10</span><span class="token operator">:</span><span class="token number">22</span><span class="token operator">:</span><span class="token number">33</span><span class="token operator">:</span><span class="token number">303</span> <span class="token operator">-</span> <span class="token class-name">Result</span> of task <span class="token number">3</span>
+<span class="token number">10</span><span class="token operator">:</span><span class="token number">22</span><span class="token operator">:</span><span class="token number">33</span><span class="token operator">:</span><span class="token number">303</span> <span class="token operator">-</span> <span class="token class-name">Result</span> of task <span class="token number">4</span>
+<span class="token comment">// 示例2：按标准方式使用 CompletionService</span>
+<span class="token number">10</span><span class="token operator">:</span><span class="token number">22</span><span class="token operator">:</span><span class="token number">33</span><span class="token operator">:</span><span class="token number">305</span> <span class="token operator">-</span> <span class="token class-name">Task</span> <span class="token number">5</span> started<span class="token punctuation">,</span> duration<span class="token operator">=</span><span class="token number">1000</span>
+<span class="token number">10</span><span class="token operator">:</span><span class="token number">22</span><span class="token operator">:</span><span class="token number">33</span><span class="token operator">:</span><span class="token number">305</span> <span class="token operator">-</span> <span class="token class-name">Task</span> <span class="token number">7</span> started<span class="token punctuation">,</span> duration<span class="token operator">=</span><span class="token number">600</span>
+<span class="token number">10</span><span class="token operator">:</span><span class="token number">22</span><span class="token operator">:</span><span class="token number">33</span><span class="token operator">:</span><span class="token number">305</span> <span class="token operator">-</span> <span class="token class-name">Task</span> <span class="token number">6</span> started<span class="token punctuation">,</span> duration<span class="token operator">=</span><span class="token number">800</span>
+<span class="token number">10</span><span class="token operator">:</span><span class="token number">22</span><span class="token operator">:</span><span class="token number">33</span><span class="token operator">:</span><span class="token number">305</span> <span class="token operator">-</span> <span class="token class-name">Task</span> <span class="token number">8</span> started<span class="token punctuation">,</span> duration<span class="token operator">=</span><span class="token number">400</span>
+<span class="token number">10</span><span class="token operator">:</span><span class="token number">22</span><span class="token operator">:</span><span class="token number">33</span><span class="token operator">:</span><span class="token number">718</span> <span class="token operator">-</span> <span class="token class-name">Task</span> <span class="token number">8</span> completed<span class="token punctuation">.</span>
+<span class="token number">10</span><span class="token operator">:</span><span class="token number">22</span><span class="token operator">:</span><span class="token number">33</span><span class="token operator">:</span><span class="token number">718</span> <span class="token operator">-</span> <span class="token class-name">Result</span> of task <span class="token number">8</span>
+<span class="token number">10</span><span class="token operator">:</span><span class="token number">22</span><span class="token operator">:</span><span class="token number">33</span><span class="token operator">:</span><span class="token number">918</span> <span class="token operator">-</span> <span class="token class-name">Task</span> <span class="token number">7</span> completed<span class="token punctuation">.</span>
+<span class="token number">10</span><span class="token operator">:</span><span class="token number">22</span><span class="token operator">:</span><span class="token number">33</span><span class="token operator">:</span><span class="token number">918</span> <span class="token operator">-</span> <span class="token class-name">Result</span> of task <span class="token number">7</span>
+<span class="token number">10</span><span class="token operator">:</span><span class="token number">22</span><span class="token operator">:</span><span class="token number">34</span><span class="token operator">:</span><span class="token number">119</span> <span class="token operator">-</span> <span class="token class-name">Task</span> <span class="token number">6</span> completed<span class="token punctuation">.</span>
+<span class="token number">10</span><span class="token operator">:</span><span class="token number">22</span><span class="token operator">:</span><span class="token number">34</span><span class="token operator">:</span><span class="token number">119</span> <span class="token operator">-</span> <span class="token class-name">Result</span> of task <span class="token number">6</span>
+<span class="token number">10</span><span class="token operator">:</span><span class="token number">22</span><span class="token operator">:</span><span class="token number">34</span><span class="token operator">:</span><span class="token number">320</span> <span class="token operator">-</span> <span class="token class-name">Task</span> <span class="token number">5</span> completed<span class="token punctuation">.</span>
+<span class="token number">10</span><span class="token operator">:</span><span class="token number">22</span><span class="token operator">:</span><span class="token number">34</span><span class="token operator">:</span><span class="token number">320</span> <span class="token operator">-</span> <span class="token class-name">Result</span> of task <span class="token number">5</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p>可以看出，在示例 1 中，虽然 Task 4 执行时间只有 400ms，但因为我们是按照 1-2-3-4 的顺序依次取结果，因此 Task 4 完成后并没有马上打印出结果来。而在示例 2 中，对每个 Task 都是在完成时立刻就将结果打印出来了。这就是 <code>CompletionService</code> 的优势所在。</p>
+<h3 id="3、原理解释"><a href="#3、原理解释" class="headerlink" title="3、原理解释"></a>3、原理解释</h3><p><code>CompletionService</code> 之所以能够做到这点，是因为它没有采取依次遍历 Future 的方式，而是在中间加上了一个结果队列，任务完成后马上将结果放入队列，那么从队列中取到的就是最早完成的结果。</p>
+<p>如果队列为空，那么 <code>take()</code> 方法会阻塞直到队列中出现结果为止。此外 <code>CompletionService</code> 还提供一个 <code>poll()</code> 方法，返回值与 <code>take()</code> 方法一样，不同之处在于它不会阻塞，如果队列为空则立刻返回 null。这算是给用户多一种选择。</p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="mailto:undefined">Hy</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a href="https://13592491893.github.io/posts/54338.html">https://13592491893.github.io/posts/54338.html</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="https://13592491893.github.io" target="_blank">Hy</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/Executor/">Executor</a><a class="post-meta__tags" href="/tags/%E5%A4%9A%E7%BA%BF%E7%A8%8B/">多线程</a><a class="post-meta__tags" href="/tags/%E7%BA%BF%E7%A8%8B/">线程</a></div><div class="post_share"><div class="social-share" data-image="https://gitee.com/gsshy/picgo/raw/master/img/tianyuandan.jpg" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/social-share.js/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/social-share.js/dist/js/social-share.min.js" defer></script></div></div><div class="post-reward"><div class="reward-button button--animated"><i class="fas fa-qrcode"></i> 打赏</div><div class="reward-main"><ul class="reward-all"><li class="reward-item"><a href="https://cdn.jsdelivr.net/gh/zhaoze-jpg/Xianqi@main/img/reward/wechat.png" target="_blank"><img class="post-qr-code-img" src= "data:image/gif;base64,R0lGODdhAQABAPAAAMPDwwAAACwAAAAAAQABAAACAkQBADs=" data-lazy-src="https://cdn.jsdelivr.net/gh/zhaoze-jpg/Xianqi@main/img/reward/wechat.png" alt="微信"/></a><div class="post-qr-code-desc">微信</div></li><li class="reward-item"><a href="https://cdn.jsdelivr.net/gh/zhaoze-jpg/Xianqi@main/img/reward/alipay.jpg" target="_blank"><img class="post-qr-code-img" src= "data:image/gif;base64,R0lGODdhAQABAPAAAMPDwwAAACwAAAAAAQABAAACAkQBADs=" data-lazy-src="https://cdn.jsdelivr.net/gh/zhaoze-jpg/Xianqi@main/img/reward/alipay.jpg" alt="支付宝"/></a><div class="post-qr-code-desc">支付宝</div></li></ul></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/posts/8056.html"><img class="prev-cover" src= "data:image/gif;base64,R0lGODdhAQABAPAAAMPDwwAAACwAAAAAAQABAAACAkQBADs=" data-lazy-src="https://gitee.com/gsshy/picgo/raw/master/img/hello.jpg" onerror="onerror=null;src='https://cdn.jsdelivr.net/gh/zhaoze-jpg/Xianqi@main/img/friend_404.gif'" alt="cover of previous post"><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">feign使用</div></div></a></div><div class="next-post pull-right"><a href="/posts/38067.html"><img class="next-cover" src= "data:image/gif;base64,R0lGODdhAQABAPAAAMPDwwAAACwAAAAAAQABAAACAkQBADs=" data-lazy-src="https://gitee.com/gsshy/picgo/raw/master/img/chimian.jpg" onerror="onerror=null;src='https://cdn.jsdelivr.net/gh/zhaoze-jpg/Xianqi@main/img/friend_404.gif'" alt="cover of next post"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">工作中遇到的代码问题及优化</div></div></a></div></nav><hr/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 评论</span></div></div><div class="comment-wrap"><div><div class="vcomment" id="vcomment"></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src= "data:image/gif;base64,R0lGODdhAQABAPAAAMPDwwAAACwAAAAAAQABAAACAkQBADs=" data-lazy-src="https://gitee.com/gsshy/picgo/raw/master/img/goutou.jpg" onerror="this.onerror=null;this.src='https://cdn.jsdelivr.net/gh/zhaoze-jpg/Xianqi@main/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">Hy</div><div class="author-info__description">博客因兴趣诞生,在不断完善中</div></div><div class="card-info-data"><div class="card-info-data-item is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">30</div></a></div><div class="card-info-data-item is-center"><a href="/tags/"><div class="headline">标签</div><div class="length-num">59</div></a></div><div class="card-info-data-item is-center"><a href="/categories/"><div class="headline">分类</div><div class="length-num">15</div></a></div></div><a class="button--animated" id="card-info-btn" href="https://13592491893.github.io"><i class="fab fa-home"></i><span>个人主页</span></a><div class="card-info-social-icons is-center"><a class="social-icon" href="https://github.com/zhaoze-jpg/Xianqi" target="_blank" title="Github"><i class="fab fa-github"></i></a><a class="social-icon" href="tencent://AddContact/?fromId=45&amp;fromSubId=1&amp;subcmd=all&amp;uin=xxxxxxxxxx&amp;website=www.qtxml.cn" target="_blank" title="Email"><i class="fas fa-envelope"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn card-announcement-animation"></i><span>公告</span></div><div class="announcement_content">兴趣爱好才是最大的动力，何不与我共同来攀知识高峰，品翘楚美人！</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Executor%E6%A1%86%E6%9E%B6"><span class="toc-number">1.</span> <span class="toc-text">Executor框架</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%80%E3%80%81Executor%E3%80%81Executors%E3%80%81ExecutorService"><span class="toc-number">1.1.</span> <span class="toc-text">一、Executor、Executors、ExecutorService</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1%E3%80%81Executor%E7%9A%84UML%E5%9B%BE%EF%BC%9A%EF%BC%88%E5%B8%B8%E7%94%A8%E7%9A%84%E5%87%A0%E4%B8%AA%E6%8E%A5%E5%8F%A3%E5%92%8C%E5%AD%90%E7%B1%BB%EF%BC%89"><span class="toc-number">1.1.1.</span> <span class="toc-text">1、Executor的UML图：（常用的几个接口和子类）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2%E3%80%81Executor%E5%92%8CExecutorService"><span class="toc-number">1.1.2.</span> <span class="toc-text">2、Executor和ExecutorService</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3%E3%80%81Executors%E7%B1%BB%EF%BC%9A-%E4%B8%BB%E8%A6%81%E7%94%A8%E4%BA%8E%E6%8F%90%E4%BE%9B%E7%BA%BF%E7%A8%8B%E6%B1%A0%E7%9B%B8%E5%85%B3%E7%9A%84%E6%93%8D%E4%BD%9C"><span class="toc-number">1.1.3.</span> <span class="toc-text">3、Executors类： 主要用于提供线程池相关的操作</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4%E3%80%81Executor-VS-ExecutorService-VS-Executors"><span class="toc-number">1.1.4.</span> <span class="toc-text">4、Executor VS ExecutorService VS Executors</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5%E3%80%81%E8%87%AA%E5%AE%9A%E4%B9%89%E7%BA%BF%E7%A8%8B%E6%B1%A0"><span class="toc-number">1.1.5.</span> <span class="toc-text">5、自定义线程池</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#6%E3%80%81%E6%AF%94%E8%BE%83Executor%E5%92%8Cnew-Thread"><span class="toc-number">1.1.6.</span> <span class="toc-text">6、比较Executor和new Thread()</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BA%8C%E3%80%81ExecutorService%E5%92%8CThreadPoolExecutor"><span class="toc-number">1.2.</span> <span class="toc-text">二、ExecutorService和ThreadPoolExecutor</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1%E3%80%81%E5%88%9B%E5%BB%BA%E7%BA%BF%E7%A8%8B%E6%B1%A0%E6%9C%89%E4%B8%A4%E7%A7%8D%E6%96%B9%E5%BC%8F"><span class="toc-number">1.2.1.</span> <span class="toc-text">1、创建线程池有两种方式</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2%E3%80%81ExecutorService"><span class="toc-number">1.2.2.</span> <span class="toc-text">2、ExecutorService</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3%E3%80%81ThreadPoolExecutor"><span class="toc-number">1.2.3.</span> <span class="toc-text">3、ThreadPoolExecutor</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%88%9B%E5%BB%BAThreadPoolExecutor"><span class="toc-number">1.2.3.1.</span> <span class="toc-text">创建ThreadPoolExecutor</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%89%E3%80%81CompletionService"><span class="toc-number">1.3.</span> <span class="toc-text">三、CompletionService</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1%E3%80%81%E4%BD%BF%E7%94%A8%E5%9C%BA%E6%99%AF"><span class="toc-number">1.3.1.</span> <span class="toc-text">1、使用场景</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2%E3%80%81%E7%A4%BA%E4%BE%8B%EF%BC%88%E6%9B%B4%E5%A5%BD%E7%9A%84%E5%8F%AF%E4%BB%A5%E7%9C%8B%E4%BB%A3%E7%A0%81%E9%87%8C%E7%9A%84%E6%B5%8B%E8%AF%95%E5%86%85%E5%AE%B9%EF%BC%89"><span class="toc-number">1.3.2.</span> <span class="toc-text">2、示例（更好的可以看代码里的测试内容）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3%E3%80%81%E5%8E%9F%E7%90%86%E8%A7%A3%E9%87%8A"><span class="toc-number">1.3.3.</span> <span class="toc-text">3、原理解释</span></a></li></ol></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/posts/2c9a5c07.html" title="MySQL优化">MySQL优化</a><time datetime="2021-12-28T16:00:00.000Z" title="发表于 2021-12-28 16:00:00">2021-12-28</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/posts/b75e281c.html" title="Docker基础篇之快速上手">Docker基础篇之快速上手</a><time datetime="2021-12-19T16:00:00.000Z" title="发表于 2021-12-19 16:00:00">2021-12-19</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/posts/6d9732ac.html" title="ObjectTools">ObjectTools</a><time datetime="2021-12-15T16:00:00.000Z" title="发表于 2021-12-15 16:00:00">2021-12-15</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/posts/deb5175a.html" title="Linux学习">Linux学习</a><time datetime="2021-12-06T17:00:00.000Z" title="发表于 2021-12-06 17:00:00">2021-12-06</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/posts/e7c06c22.html" title="线程面试题">线程面试题</a><time datetime="2021-11-25T16:00:00.000Z" title="发表于 2021-11-25 16:00:00">2021-11-25</time></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2021  <i id="heartbeat" class="fa fas fa-heartbeat"></i> Hy</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div><head><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/HCLonely/images@master/others/heartbeat.min.css"></head></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="translateLink" type="button" title="简繁转换">繁</button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><a id="to_comment" href="#post-comment" title="直达评论"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="回到顶部"><i class="fas fa-arrow-up"></i></button></div></div><div id="local-search"><div class="search-dialog"><div class="search-dialog__title" id="local-search-title">本地搜索</div><div id="local-input-panel"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章" type="text"/></div></div></div><hr/><div id="local-search-results"></div><span class="search-close-button"><i class="fas fa-times"></i></span></div><div id="search-mask"></div></div><div><script src="https://cdn.jsdelivr.net/gh/zhaoze-jpg/Xianqi@main/js/utils.js"></script><script src="https://cdn.jsdelivr.net/gh/zhaoze-jpg/Xianqi@main/js/main.js"></script><script src="https://cdn.jsdelivr.net/gh/zhaoze-jpg/Xianqi@main/js/tw_cn.js"></script><script src="https://cdn.jsdelivr.net/npm/vanilla-lazyload/dist/lazyload.iife.min.js"></script><script src="https://cdn.jsdelivr.net/gh/zhaoze-jpg/Xianqi@main/js/search/local-search.js"></script><script>var preloader = {
+  endLoading: () => {
+    document.body.style.overflow = 'auto';
+    document.getElementById('loading-box').classList.add("loaded")
+  },
+  initLoading: () => {
+    document.body.style.overflow = '';
+    document.getElementById('loading-box').classList.remove("loaded")
+
+  }
+}
+window.addEventListener('load',preloader.endLoading())</script><div class="js-pjax"><script>function loadValine () {
+  function initValine () {
+    const valine = new Valine(Object.assign({
+      el: '#vcomment',
+      appId: '',
+      appKey: '',
+      placeholder: '畅所欲言！',
+      avatar: 'monsterid',
+      meta: 'nick,mail,link'.split(','),
+      pageSize: '10',
+      lang: 'zh-CN',
+      recordIP: false,
+      serverURLs: '',
+      emojiCDN: '',
+      emojiMaps: "",
+      enableQQ: true,
+      path: window.location.pathname,
+      requiredFields: ["nick,mail"],
+      visitor: false
+    }, null))
+  }
+
+  if (typeof Valine === 'function') initValine() 
+  else getScript('https://cdn.jsdelivr.net/npm/valine/dist/Valine.min.js').then(initValine)
+}
+
+if ('Valine' === 'Valine' || !true) {
+  if (true) btf.loadComment(document.getElementById('vcomment'),loadValine)
+  else setTimeout(loadValine, 0)
+} else {
+  function loadOtherComment () {
+    loadValine()
+  }
+}</script></div><script defer type="text/javascript" src="https://cdn.jsdelivr.net/gh/zhaoze-jpg/Xianqi@main/js/sakura.js"></script><script defer type="text/javascript" src="https://cdn.jsdelivr.net/gh/zhaoze-jpg/Xianqi@main/js/animate.js"></script><div class="aplayer no-destroy" data-id="1776127550" data-server="tencent" data-type="playlist" data-fixed="true" data-mini="true" data-listFolded="false" data-order="random" data-preload="auto" data-autoplay="true" muted></div><script defer="defer" id="fluttering_ribbon" mobile="false" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1/dist/canvas-fluttering-ribbon.min.js"></script><script id="canvas_nest" defer="defer" color="0,0,255" opacity="0.7" zIndex="-1" count="99" mobile="false" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1/dist/canvas-nest.min.js"></script><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1/dist/activate-power-mode.min.js"></script><script>POWERMODE.colorful = true;
+POWERMODE.shake = false;
+POWERMODE.mobile = false;
+document.body.addEventListener('input', POWERMODE);
+</script><script id="click-heart" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1/dist/click-heart.min.js" async="async" mobile="false"></script><script src="https://cdn.jsdelivr.net/npm/pjax/pjax.min.js"></script><script>let pjaxSelectors = [
+  'title',
+  '#config-diff',
+  '#body-wrap',
+  '#rightside-config-hide',
+  '#rightside-config-show',
+  '.js-pjax'
+]
+
+if (false) {
+  pjaxSelectors.unshift('meta[property="og:image"]', 'meta[property="og:title"]', 'meta[property="og:url"]')
+}
+
+var pjax = new Pjax({
+  elements: 'a:not([target="_blank"])',
+  selectors: pjaxSelectors,
+  cacheBust: false,
+  analytics: false,
+  scrollRestoration: false
+})
+
+document.addEventListener('pjax:send', function () {
+
+  // removeEventListener scroll 
+  window.removeEventListener('scroll', window.tocScrollFn)
+  window.removeEventListener('scroll', scrollCollect)
+
+  typeof preloader === 'object' && preloader.initLoading()
+  
+  if (window.aplayers) {
+    for (let i = 0; i < window.aplayers.length; i++) {
+      if (!window.aplayers[i].options.fixed) {
+        window.aplayers[i].destroy()
+      }
+    }
+  }
+
+  typeof typed === 'object' && typed.destroy()
+
+  //reset readmode
+  const $bodyClassList = document.body.classList
+  $bodyClassList.contains('read-mode') && $bodyClassList.remove('read-mode')
+
+})
+
+document.addEventListener('pjax:complete', function () {
+  window.refreshFn()
+
+  document.querySelectorAll('script[data-pjax]').forEach(item => {
+    const newScript = document.createElement('script')
+    const content = item.text || item.textContent || item.innerHTML || ""
+    Array.from(item.attributes).forEach(attr => newScript.setAttribute(attr.name, attr.value))
+    newScript.appendChild(document.createTextNode(content))
+    item.parentNode.replaceChild(newScript, item)
+  })
+
+  GLOBAL_CONFIG.islazyload && window.lazyLoadInstance.update()
+
+  typeof chatBtnFn === 'function' && chatBtnFn()
+  typeof panguInit === 'function' && panguInit()
+
+  // google analytics
+  typeof gtag === 'function' && gtag('config', '', {'page_path': window.location.pathname});
+
+  // baidu analytics
+  typeof _hmt === 'object' && _hmt.push(['_trackPageview',window.location.pathname]);
+
+  typeof loadMeting === 'function' && document.getElementsByClassName('aplayer').length && loadMeting()
+
+  // Analytics
+  if (false) {
+    MtaH5.pgv()
+  }
+
+  // prismjs
+  typeof Prism === 'object' && Prism.highlightAll()
+
+  typeof preloader === 'object' && preloader.endLoading()
+})
+
+document.addEventListener('pjax:error', (e) => {
+  if (e.request.status === 404) {
+    pjax.loadUrl('/404.html')
+  }
+})</script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div><script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"model":{"jsonPath":"/live2dw/assets/hibiki.model.json"},"display":{"position":"right","width":150,"height":400},"mobile":{"show":false},"log":false,"pluginJsPath":"lib/","pluginModelPath":"assets/","pluginRootPath":"live2dw/","tagMode":false});</script></body></html>
